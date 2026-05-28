@@ -57,7 +57,7 @@ One of the most innovative elements of the system is the automation of communica
 - Persistence: Entity Framework Core, SQL Server
 - Payments: Stripe API
 - AI/LLM Integration: Model Context Protocol (MCP)
-- Messaging: Slack API
+- Messaging: Discord API
 - Testing: xUnit, Moq
 - Frontend: ASP.NET Core MVC (Razor)
 
