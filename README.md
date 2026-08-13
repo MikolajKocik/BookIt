@@ -29,12 +29,6 @@ Modern hospitality requires speed, reliability, and automation. Traditional syst
 
 ---
 
-## Video
-
-[![Watch the video](https://img.youtube.com/vi/Fi9cs86jCNw/maxresdefault.jpg)](https://youtu.be/Fi9cs86jCNw)
-
----
-
 ## Architecture and Patterns
 
 The project is designed with software engineering best practices in mind:
@@ -91,3 +85,9 @@ One of the most innovative elements of the system is the automation of communica
    ```bash
    dotnet run --project HotelReservationSystem/HotelReservationSystem.Web
    ```
+
+---
+
+## Video
+
+[![Watch the video](https://img.youtube.com/vi/Fi9cs86jCNw/maxresdefault.jpg)](https://youtu.be/Fi9cs86jCNw)
