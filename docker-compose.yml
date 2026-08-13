@@ -14,6 +14,8 @@ services:
       - ConnectionStrings__Redis=redis:6379
       - ConnectionStrings__AzureStorage=${AZURITE_CONN_STRING}
       - OpenAI__ApiKey=${OPENAI_API_KEY}
+      - OpenAI__Provider=${OPENAI_PROVIDER}
+      - OpenAI__Model=${OPENAI_MODEL}
       - ASPNETCORE_ENVIRONMENT=Development 
     volumes:
       - data-protection-keys:/home/app/.aspnet/DataProtection-Keys
