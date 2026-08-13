@@ -1,1 +1,155 @@
-.object-fit-cover{object-fit:cover}#gallery-button,#agent-button{background-color:#a88333 !important;transition:1s;min-width:10rem}#gallery-button:hover,#agent-button:hover{transform:scale(1.05);background-color:#891c1c !important}#gallery-button:active,#agent-button:active{background-color:#a88333 !important}#agent-container{position:fixed;bottom:5.5rem;right:2rem;z-index:9999;width:23.75rem;height:34.375rem;transition:all .3s cubic-bezier(0.16, 1, 0.3, 1)}#agent-container .agent-header{background:linear-gradient(135deg, #122642 0%, #23405c 100%)}#agent-container .agent-header .avatar{width:2.375rem;height:2.375rem;border:.125rem solid rgba(255,255,255,.2)}#agent-container .agent-header .status-dot{bottom:.0625rem;right:.0625rem;width:.625rem;height:.625rem;border:.125rem solid #122642}#agent-container .text-messages-list::-webkit-scrollbar{width:.375rem}#agent-container .text-messages-list::-webkit-scrollbar-track{background:rgba(0,0,0,0)}#agent-container .text-messages-list::-webkit-scrollbar-thumb{background:rgba(0,0,0,.1);border-radius:.1875rem}#agent-container .text-messages-list::-webkit-scrollbar-thumb:hover{background:rgba(0,0,0,.2)}#agent-container .text-messages-list .text-message{max-width:80%}#agent-container .text-messages-list .text-message.user-message{border-radius:.875rem .875rem .125rem .875rem}#agent-container .text-messages-list .text-message.bot-message{border-radius:.875rem .875rem .875rem .125rem}#agent-container .chat-typing-indicator .typing-dot{animation:bounce 1.4s infinite both}#agent-container .chat-typing-indicator .typing-dot:nth-child(2){animation-delay:.2s}#agent-container .chat-typing-indicator .typing-dot:nth-child(3){animation-delay:.4s}@keyframes bounce{0%,80%,100%{transform:scale(0)}40%{transform:scale(1)}}#availability-rooms{background-color:#3041ae !important;color:#fff !important;transition:all .5s ease}#availability-rooms:hover{background-color:#30a9ca !important;transform:scale(1.05)}#stars{color:#cfa121 !important;font-size:2.5rem !important}@media(min-width: 1552px){#stars{font-size:3rem !important}}.review-item{transition:transform .3s ease}.review-item:hover{transform:translateY(-0.3125rem)}.rating-review-section{background:#4971a6 !important;color:#d4b32a !important}.rating-review-icon{width:2.5rem;height:2.5rem;border:.125rem solid #23405c}#scroll-up-button{bottom:2rem;right:2rem;width:3.5rem;height:3.5rem;z-index:1050;background:#fff !important;cursor:pointer;transition:all .3s ease}#scroll-up-button:hover{transform:scale(1.1)}.bottom-nav-dots .dot{width:.75rem;height:.75rem;border-radius:50%;border:.125rem solid #ccc !important;background:#fff !important;cursor:pointer;padding:0}
+.object-fit-cover {
+  object-fit: cover;
+}
+
+#gallery-button,
+#agent-button {
+  background-color: #A88333 !important;
+  transition: 1s;
+  min-width: 10rem;
+}
+#gallery-button:hover,
+#agent-button:hover {
+  transform: scale(1.05);
+  background-color: rgb(137, 28, 28) !important;
+}
+#gallery-button:active,
+#agent-button:active {
+  background-color: #A88333 !important;
+}
+
+#agent-container {
+  position: fixed;
+  bottom: 0.5rem;
+  right: 6.5rem;
+  z-index: 9999;
+  width: 23.75rem;
+  height: 34.375rem;
+  overflow: hidden;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+#agent-container .agent-header {
+  background: linear-gradient(135deg, #122642 0%, #23405c 100%);
+  border-radius: calc(0.5rem - 1px) calc(0.5rem - 1px) 0 0;
+}
+#agent-container .agent-header .avatar {
+  width: 2.375rem;
+  height: 2.375rem;
+  border: 0.125rem solid rgba(255, 255, 255, 0.2);
+}
+#agent-container .agent-header .status-dot {
+  bottom: 0.0625rem;
+  right: 0.0625rem;
+  width: 0.625rem;
+  height: 0.625rem;
+  border: 0.125rem solid #122642;
+}
+#agent-container .text-messages-list {
+  min-height: 0;
+  overflow-y: auto;
+}
+#agent-container .text-messages-list::-webkit-scrollbar {
+  width: 0.375rem;
+}
+#agent-container .text-messages-list::-webkit-scrollbar-track {
+  background: transparent;
+}
+#agent-container .text-messages-list::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.35);
+  border-radius: 0.1875rem;
+}
+#agent-container .text-messages-list::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.5);
+}
+#agent-container .text-messages-list .text-message {
+  max-width: 80%;
+}
+#agent-container .text-messages-list .text-message.user-message {
+  border-radius: 0.875rem 0.875rem 0.125rem 0.875rem;
+}
+#agent-container .text-messages-list .text-message.bot-message {
+  border-radius: 0.875rem 0.875rem 0.875rem 0.125rem;
+}
+#agent-container .chat-typing-indicator .typing-dot {
+  animation: bounce 1.4s infinite both;
+}
+#agent-container .chat-typing-indicator .typing-dot:nth-child(2) {
+  animation-delay: 0.2s;
+}
+#agent-container .chat-typing-indicator .typing-dot:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+@keyframes bounce {
+  0%, 80%, 100% {
+    transform: scale(0);
+  }
+  40% {
+    transform: scale(1);
+  }
+}
+#availability-rooms {
+  background-color: #3041AE !important;
+  color: white !important;
+  transition: all 0.5s ease;
+}
+#availability-rooms:hover {
+  background-color: rgb(48, 169, 202) !important;
+  transform: scale(1.05);
+}
+
+#stars {
+  color: #cfa121 !important;
+  font-size: 2.5rem !important;
+}
+@media (min-width: 1552px) {
+  #stars {
+    font-size: 3rem !important;
+  }
+}
+
+.review-item {
+  transition: transform 0.3s ease;
+}
+.review-item:hover {
+  transform: translateY(-0.3125rem);
+}
+
+.rating-review-section {
+  background: #4971a6 !important;
+  color: #d4b32a !important;
+}
+
+.rating-review-icon {
+  width: 2.5rem;
+  height: 2.5rem;
+  border: 0.125rem solid #23405c;
+}
+
+#agent-chat-button {
+  bottom: 6.5rem;
+  right: 2rem;
+  width: 3.5rem;
+  height: 3.5rem;
+  z-index: 1050;
+  background: white !important;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+#agent-chat-button:hover {
+  transform: scale(1.1);
+}
+
+#scroll-up-button {
+  bottom: 2rem;
+  right: 2rem;
+  width: 3.5rem;
+  height: 3.5rem;
+  z-index: 1050;
+  background: white !important;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+#scroll-up-button:hover {
+  transform: scale(1.1);
+}

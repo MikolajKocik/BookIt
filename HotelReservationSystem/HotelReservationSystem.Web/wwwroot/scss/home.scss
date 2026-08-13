@@ -36,10 +36,12 @@ $dot-bg: #fff;
     z-index: 9999;
     width: 23.75rem;
     height: 34.375rem;
+    overflow: hidden;
     transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 
     .agent-header {
         background: linear-gradient(135deg, #122642 0%, #23405c 100%);
+        border-radius: calc(0.5rem - 1px) calc(0.5rem - 1px) 0 0;
 
         .avatar {
             width: 2.375rem;
@@ -57,6 +59,9 @@ $dot-bg: #fff;
     }
 
     .text-messages-list {
+        min-height: 0;
+        overflow-y: auto;
+
         &::-webkit-scrollbar {
             width: 0.375rem;
         }
@@ -66,12 +71,12 @@ $dot-bg: #fff;
         }
 
         &::-webkit-scrollbar-thumb {
-            background: rgba(0, 0, 0, 0.1);
+            background: rgba(0, 0, 0, 0.35);
             border-radius: 0.1875rem;
-        }
 
-        &::-webkit-scrollbar-thumb:hover {
-            background: rgba(0, 0, 0, 0.2);
+            &:hover {
+                background: rgba(0, 0, 0, 0.5);
+            }
         }
 
         .text-message {

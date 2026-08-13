@@ -1,1 +1,12 @@
-.canceled-icon{color:#c82333;width:2.25rem;height:2.25rem;flex-shrink:0}@media(max-width: 992px){.canceled-icon{width:2rem;height:2rem}}
+.canceled-icon {
+  color: #c82333;
+  width: 2.25rem;
+  height: 2.25rem;
+  flex-shrink: 0;
+}
+@media (max-width: 992px) {
+  .canceled-icon {
+    width: 2rem;
+    height: 2rem;
+  }
+}
