@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.13.35806.99
+# Visual Studio Version 18
+VisualStudioVersion = 18.7.11903.348 stable
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HotelReservationSystem.Web", "HotelReservationSystem.Web\HotelReservationSystem.Web.csproj", "{E8960F09-9048-437A-9D06-F3538EE170EA}"
 EndProject
@@ -16,6 +16,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HotelReservationSystem.Workers", "HotelReservationSystem.Workers\HotelReservationSystem.Workers.csproj", "{CBC62055-0048-48CB-A72E-63DE5A00A1E1}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HotelReservationSystem.MCP.Server", "HotelReservationSystem.MCP.Server\HotelReservationSystem.MCP.Server.csproj", "{2EC7FBEA-1157-4120-A473-505B158CB262}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HotelReservationSystem_Functions", "HotelReservationSystem.Functions\HotelReservationSystem_Functions.csproj", "{7454B012-A5FF-B31E-7553-E71429D51EAA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -51,6 +53,10 @@ Global
 		{2EC7FBEA-1157-4120-A473-505B158CB262}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2EC7FBEA-1157-4120-A473-505B158CB262}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2EC7FBEA-1157-4120-A473-505B158CB262}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7454B012-A5FF-B31E-7553-E71429D51EAA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7454B012-A5FF-B31E-7553-E71429D51EAA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7454B012-A5FF-B31E-7553-E71429D51EAA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7454B012-A5FF-B31E-7553-E71429D51EAA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

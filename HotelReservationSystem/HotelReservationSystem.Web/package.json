@@ -1,5 +1,11 @@
 {
   "dependencies": {
     "typescript": "^5.9.3"
+  },
+  "scripts": {
+    "sass": "sass --watch wwwroot/scss:wwwroot/scss --no-source-map"
+  },
+  "devDependencies": {
+    "sass": "^1.102.0"
   }
 }
