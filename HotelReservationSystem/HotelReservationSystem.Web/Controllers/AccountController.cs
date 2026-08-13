@@ -1,8 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Identity;
-using HotelReservationSystem.Web.ViewModels;
-using Microsoft.AspNetCore.RateLimiting;
 using HotelReservationSystem.Core.Domain.Entities;
+using HotelReservationSystem.Web.ViewModels;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 
 public sealed class AccountController : Controller
 {
@@ -10,7 +10,7 @@ public sealed class AccountController : Controller
     private readonly SignInManager<Guest> signInManager;
 
     public AccountController(
-        UserManager<Guest> userManager, 
+        UserManager<Guest> userManager,
         SignInManager<Guest> signInManager
         )
     {
@@ -48,13 +48,13 @@ public sealed class AccountController : Controller
 
                 return Json(new { redirectUrl = returnUrl });
             }
-            
+
             foreach (var error in result.Errors)
                 ModelState.AddModelError(string.Empty, error.Description);
         }
 
         Response.StatusCode = StatusCodes.Status400BadRequest;
-        return PartialView("~/Views/Shared/_RegisterForm.cshtml", model);
+        return PartialView("~/Views/Shared/Auth/_RegisterForm.cshtml", model);
 
     }
 
@@ -80,7 +80,7 @@ public sealed class AccountController : Controller
         }
 
         Response.StatusCode = StatusCodes.Status400BadRequest;
-        return PartialView("~/Views/Shared/_LoginForm.cshtml", model);
+        return PartialView("~/Views/Shared/Auth/_LoginForm.cshtml", model);
     }
 
     [HttpPost]

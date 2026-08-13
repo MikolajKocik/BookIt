@@ -29,7 +29,7 @@
                     </button>
                 </div>
 
-                <div id="agent-container" class="position-fixed bg-white border shadow-lg rounded-3 overflow-hidden d-flex flex-column d-none" style="z-index: 9999;">                    
+                <div id="agent-container" class="position-fixed bg-white border shadow-lg rounded-3 d-flex flex-column d-none" style="z-index: 9999;">                    
                     @Html.AntiForgeryToken()
                     <div class="agent-header d-flex align-items-center justify-content-between text-white p-3 w-100">
                         <div class="d-flex align-items-center gap-2">
@@ -44,8 +44,8 @@
                         </div>
                         <button type="button" class="btn-close btn-close-white btn-close-chat" aria-label="Close"></button>
                     </div>
-                    <div class="d-flex flex-column flex-grow-1 overflow-hidden bg-light">
-                        <div class="text-messages-list overflow-y-auto flex-grow-1 p-3 d-flex flex-column gap-2">
+                    <div class="d-flex flex-column bg-light" style="flex: 1 1 0; min-height: 0;">
+                        <div class="text-messages-list p-3 d-flex flex-column gap-2" style="flex: 1 1 0; min-height: 0;">
                             @foreach (var msg in Model.Messages)
                             {
                                 <div class="text-message p-2 px-3 shadow-sm @(msg.IsUser ? "user-message align-self-end text-white bg-primary" : "bot-message align-self-start bg-white text-dark border")">
