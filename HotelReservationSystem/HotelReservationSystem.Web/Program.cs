@@ -1,15 +1,16 @@
+using HotelReservationSystem.Application.Extensions;
 using HotelReservationSystem.Infrastructure.Data;
 using HotelReservationSystem.Infrastructure.Data.Extensions;
 using HotelReservationSystem.Infrastructure.Extensions;
-using HotelReservationSystem.Application.Extensions;
-using HotelReservationSystem.Web.Extensions;
-using HotelReservationSystem.Web.Configuration;
-using Microsoft.EntityFrameworkCore;
 using HotelReservationSystem.MCP.Server;
-using HotelReservationSystem.Web.Middleware.MiddlewareExtensions;
+using HotelReservationSystem.Web.Configuration;
+using HotelReservationSystem.Web.Extensions;
 using HotelReservationSystem.Web.Filters;
-using OpenAI.Chat;
+using HotelReservationSystem.Web.Middleware.MiddlewareExtensions;
 using Microsoft.AspNetCore.DataProtection;
+using Microsoft.EntityFrameworkCore;
+using OpenAI;
+using OpenAI.Chat;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -33,10 +34,24 @@ builder.Services.AddWebServices(builder.Configuration);
 
 builder.Services.AddHttpContextAccessor();
 
-string openAiKey = builder.Configuration["OpenAI:ApiKey"] 
-    ?? throw new InvalidOperationException("OpenAI Key not found in configuration");
+string openAiProvider = builder.Configuration["OpenAI:Provider"] ?? "OpenAI";
 string openAiModel = builder.Configuration["OpenAI:Model"] ?? "gpt-4o-mini";
-builder.Services.AddSingleton(new ChatClient(openAiModel, openAiKey));
+
+if (openAiProvider.Equals("Ollama", StringComparison.OrdinalIgnoreCase))
+{
+    var options = new OpenAIClientOptions
+    {
+        Endpoint = new Uri("http://host.docker.internal:11434/v1")
+    };
+    var client = new OpenAIClient(new System.ClientModel.ApiKeyCredential("ollama"), options);
+    builder.Services.AddSingleton(client.GetChatClient(openAiModel));
+}
+else
+{
+    string openAiKey = builder.Configuration["OpenAI:ApiKey"]
+        ?? throw new InvalidOperationException("OpenAI Key not found in configuration");
+    builder.Services.AddSingleton(new ChatClient(openAiModel, openAiKey));
+}
 
 builder.Services.AddHotelMcpServer(builder.Configuration);
 
