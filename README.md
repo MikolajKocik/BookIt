@@ -6,7 +6,7 @@ BookIt is a modern hotel reservation system, scalable application built on .NET 
 
 ## What problem does this project solve?
 
-Modern hospitality requires speed, reliability, and automation. Traditional systems often suffer from a lack of flexibility and difficulty integrating with modern tools. HotelReservationSystem addresses these challenges by:
+Modern hospitality requires speed, reliability, and automation. Traditional systems often suffer from a lack of flexibility and difficulty integrating with modern tools. BookIt addresses these challenges by:
 
 1. Automating the reservation cycle: Eliminates manual errors from the moment of room selection, through discount calculation, up to payment finalization.
 2. Financial security: Integration with Stripe ensures secure transaction processing, handling of refunds, and webhooks without the need to store sensitive payment data.
