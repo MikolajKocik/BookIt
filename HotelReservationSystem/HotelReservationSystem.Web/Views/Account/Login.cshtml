@@ -1,8 +1,8 @@
-﻿@using HotelReservationSystem.Web.ViewModels
+@using HotelReservationSystem.Web.ViewModels
 @model LoginViewModel
 
 <h2>Logowanie</h2>
 
-<div class="privacy-container">
-    @await Html.PartialAsync("~/Views/Shared/_LoginForm.cshtml", Model ?? new LoginViewModel())
+<div class="container py-5 d-flex justify-content-center">
+    @await Html.PartialAsync("~/Views/Shared/Auth/_LoginForm.cshtml", Model ?? new LoginViewModel())
 </div>
