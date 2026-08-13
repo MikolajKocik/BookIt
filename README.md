@@ -25,6 +25,14 @@ Modern hospitality requires speed, reliability, and automation. Traditional syst
 - Background Workers: Asynchronous processing of tasks (e.g., reservation queue, notification delivery).
 - AI MCP Server: Dedicated MCP server enabling Large Language Models (LLMs) to execute tools (e.g., notify_staff, book_room).
 
+![chatbot-animals-response](docs/chatbot-animals-response.PNG)
+
+---
+
+## Video
+
+[![Watch the video](https://img.youtube.com/vi/Fi9cs86jCNw/maxresdefault.jpg)](https://youtu.be/Fi9cs86jCNw)
+
 ---
 
 ## Architecture and Patterns
@@ -42,6 +50,8 @@ The project is designed with software engineering best practices in mind:
 ## Request Flow (AI Agent -> Reception)
 
 One of the most innovative elements of the system is the automation of communication between the guest (served by AI) and the hotel staff. Example request flow:
+
+![Staff Notification Flow](docs/Staff%20Notification%20Flow.PNG)
 
 1. Interaction: A guest asks the AI Agent (e.g., via chat) for extra towels.
 2. Tool Invocation: The AI Agent, using the MCP protocol, invokes the `notify_staff` tool provided by the MCP server.
