@@ -1,3 +1,9 @@
+type Message = {
+    message: string,
+    isUser: boolean,
+    isError?: boolean
+}
+
 interface UserRequest {
     message: string,
     sessionId: string
@@ -29,7 +35,7 @@ interface UserRequest {
     agentChatButton?.addEventListener('click', (e) => {
         e.stopPropagation();
         agentContainer?.classList.toggle('d-none');
-        if(messagesList) {
+        if (messagesList) {
             messagesList.scrollTo(0, messagesList.scrollHeight);
         }
     });
@@ -44,14 +50,14 @@ interface UserRequest {
         }
     });
 
-    document.addEventListener('click', function(event) {
+    document.addEventListener('click', function (event) {
         if (!(event.target instanceof Node)) return;
         if (!agentContainer || !agentChatButton) return;
 
         const isOpen = !agentContainer.classList.contains('d-none');
 
         if (isOpen) {
-            const clickedOutsideContainer = !agentContainer.contains(event.target);            
+            const clickedOutsideContainer = !agentContainer.contains(event.target);
             const clickedOutsideButton = !agentChatButton.contains(event.target);
 
             if (clickedOutsideContainer && clickedOutsideButton) {
@@ -60,14 +66,27 @@ interface UserRequest {
         }
     });
 
+    const addMessage = ({ message, isUser, isError = false }: Message) => {
+        const element = document.createElement('div');
+        element.className = isUser
+            ? 'text-message p-2 px-3 shadow-sm user-message align-self-end text-white bg-primary'
+            : `text-message p-2 px-3 shadow-sm bot-message align-self-start bg-white text-dark border ${isError
+                ? 'bg-white text-danger border'
+                : 'bg-white text-dark border'
+            }`;
+
+        element.textContent = message;
+        messagesList?.appendChild(element);
+    }
+
     const sendMessage = async (request: UserRequest) => {
         const token = (document.querySelector('input[name="__RequestVerificationToken"]') as HTMLInputElement)?.value;
 
-        const userMsgHtml = `
-        <div class="text-message p-2 px-3 shadow-sm user-message align-self-end text-white bg-primary">
-            ${request.message}
-        </div>`;
-        messagesList?.insertAdjacentHTML('beforeend', userMsgHtml);
+        addMessage({
+            message: request.message,
+            isUser: true
+        });
+
         if (messagesList) {
             messagesList.scrollTo(0, messagesList.scrollHeight);
         }
@@ -90,26 +109,24 @@ interface UserRequest {
 
             if (response.ok) {
                 const data = await response.json();
-
-                const botMsgHtml = `
-                <div class="text-message p-2 px-3 shadow-sm bot-message align-self-start bg-white text-dark border">
-                    ${data.answer}
-                </div>`;
-                messagesList?.insertAdjacentHTML('beforeend', botMsgHtml);
+                addMessage({
+                    message: data.answer,
+                    isUser: false
+                });
             } else {
-                const botMsgHtml = `
-                <div class="text-message p-2 px-3 shadow-sm bot-message align-self-start bg-white text-danger border">
-                    Przepraszam, wystąpił problem podczas komunikacji z serwerem.
-                </div>`;
-                messagesList?.insertAdjacentHTML('beforeend', botMsgHtml);
+                addMessage({
+                    message: 'Przepraszam, wystąpił problem podczas komunikacji z serwerem.',
+                    isUser: false,
+                    isError: true
+                });
             }
         } catch (error) {
             console.error("Kernel error:", error);
-            const botMsgHtml = `
-            <div class="text-message p-2 px-3 shadow-sm bot-message align-self-start bg-white text-danger border">
-                Przepraszam, wystąpił błąd sieci.
-            </div>`;
-            messagesList?.insertAdjacentHTML('beforeend', botMsgHtml);
+            addMessage({
+                message: 'Przepraszam, wystąpił błąd sieci.',
+                isUser: false,
+                isError: true
+            });
         } finally {
             // Hide typing indicator
             typingIndicator?.classList.add('d-none');

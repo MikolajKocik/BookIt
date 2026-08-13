@@ -11,6 +11,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 (() => {
     const agentContainer = document.getElementById("agent-container");
     const agentButton = document.getElementById("agent-button");
+    const agentChatButton = document.getElementById("agent-chat-button");
     const closeButton = document.querySelector(".agent-header .btn-close-chat");
     const messagesList = document.querySelector(".text-messages-list");
     const typingIndicator = document.getElementById("chat-typing-indicator");
@@ -26,6 +27,13 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
             messagesList.scrollTo(0, messagesList.scrollHeight);
         }
     });
+    agentChatButton === null || agentChatButton === void 0 ? void 0 : agentChatButton.addEventListener('click', (e) => {
+        e.stopPropagation();
+        agentContainer === null || agentContainer === void 0 ? void 0 : agentContainer.classList.toggle('d-none');
+        if (messagesList) {
+            messagesList.scrollTo(0, messagesList.scrollHeight);
+        }
+    });
     closeButton === null || closeButton === void 0 ? void 0 : closeButton.addEventListener('click', () => {
         agentContainer === null || agentContainer === void 0 ? void 0 : agentContainer.classList.add('d-none');
         if (messagesList) {
@@ -33,6 +41,20 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
             sessionStorage.removeItem("SESSION_ID");
             sessionId = crypto.randomUUID();
             sessionStorage.setItem("SESSION_ID", sessionId);
+        }
+    });
+    document.addEventListener('click', function (event) {
+        if (!(event.target instanceof Node))
+            return;
+        if (!agentContainer || !agentChatButton)
+            return;
+        const isOpen = !agentContainer.classList.contains('d-none');
+        if (isOpen) {
+            const clickedOutsideContainer = !agentContainer.contains(event.target);
+            const clickedOutsideButton = !agentChatButton.contains(event.target);
+            if (clickedOutsideContainer && clickedOutsideButton) {
+                agentContainer.classList.add('d-none');
+            }
         }
     });
     const sendMessage = (request) => __awaiter(void 0, void 0, void 0, function* () {
