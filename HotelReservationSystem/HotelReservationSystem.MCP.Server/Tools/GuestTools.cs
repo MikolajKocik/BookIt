@@ -46,12 +46,13 @@ public sealed class GuestTools
         
         var responseBuilder = new StringBuilder("Znaleziono następujące wolne pokoje:\n");
 
+        int totalNights = (int)(departure.Date - arrival.Date).TotalDays;
+
         foreach (var room in availableRooms)
         {
+            decimal totalPrice = room.PricePerNight * totalNights;
             responseBuilder.AppendLine(
-                @$"- ID: {room.Id} | 
-                Typ pokoju: {(guests > 2 ? RoomType.Double : RoomType.Single)} | 
-                Cena za noc: {room.PricePerNight} PLN");
+                @$"- ID: {room.Id} | Typ pokoju: {(guests > 2 ? RoomType.Double : RoomType.Single)} | Cena za noc: {room.PricePerNight} PLN | Łączna cena za {totalNights} noc/nocy: {totalPrice} PLN");
         }
 
         return responseBuilder.ToString();
