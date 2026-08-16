@@ -6,31 +6,32 @@ WORKDIR /app
 EXPOSE 8080
 EXPOSE 8081
 
+FROM node:20-slim AS node-build
+WORKDIR /app
+
+COPY HotelReservationSystem.Web/package.json HotelReservationSystem.Web/package-lock.json* ./
+RUN npm install
+
+COPY HotelReservationSystem.Web/wwwroot/scss ./wwwroot/scss
+COPY HotelReservationSystem.Web/Scripts ./Scripts
+COPY HotelReservationSystem.Web/tsconfig.json ./
+
+RUN npx sass wwwroot/scss:wwwroot/scss --no-source-map
+RUN npx tsc
+
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
-RUN apt-get update && apt-get install -y nodejs npm && rm -rf /var/lib/apt/lists/*
 WORKDIR /src
 
-# .NET packages cache
-COPY ["HotelReservationSystem.Web/HotelReservationSystem.Web.csproj", "HotelReservationSystem.Web/"]
-COPY ["HotelReservationSystem.Application/HotelReservationSystem.Application.csproj", "HotelReservationSystem.Application/"]
-COPY ["HotelReservationSystem.Infrastructure/HotelReservationSystem.Infrastructure.csproj", "HotelReservationSystem.Infrastructure/"]
-COPY ["HotelReservationSystem.Core/HotelReservationSystem.Core.csproj", "HotelReservationSystem.Core/"]
-COPY ["HotelReservationSystem.MCP.Server/HotelReservationSystem.MCP.Server.csproj", "HotelReservationSystem.MCP.Server/"]
-RUN dotnet restore "HotelReservationSystem.Web/HotelReservationSystem.Web.csproj"
-
-# NPM cache
-WORKDIR "/src/HotelReservationSystem.Web"
-COPY ["HotelReservationSystem.Web/package.json", "HotelReservationSystem.Web/package-lock.json*", "./"]
-RUN npm ci
-
-# publish process
-FROM build AS publish
-WORKDIR /src
 COPY . .
+
+COPY --from=node-build /app/wwwroot/scss ./HotelReservationSystem.Web/wwwroot/scss
+COPY --from=node-build /app/wwwroot/js   ./HotelReservationSystem.Web/wwwroot/js
+
 WORKDIR "/src/HotelReservationSystem.Web"
-RUN dotnet publish "HotelReservationSystem.Web.csproj" -c Release -o /app/publish /p:UseAppHost=false /p:PublishReadyToRun=true
+RUN dotnet restore "HotelReservationSystem.Web.csproj"
+RUN dotnet publish "HotelReservationSystem.Web.csproj" -c Release -o /app/publish /p:UseAppHost=false /p:PublishReadyToRun=true /p:TypeScriptCompileBlocked=true
 
 FROM base AS final
 WORKDIR /app
-COPY --from=publish /app/publish .
+COPY --from=build /app/publish .
 ENTRYPOINT ["dotnet", "HotelReservationSystem.Web.dll"]

@@ -3,9 +3,13 @@
     "typescript": "^5.9.3"
   },
   "scripts": {
-    "sass": "sass --watch wwwroot/scss:wwwroot/scss --no-source-map"
+    "sass": "sass --watch wwwroot/scss:wwwroot/scss --no-source-map",
+    "ts": "tsc --watch",
+    "watch": "concurrently \"npm run sass\" \"npm run ts\""
   },
   "devDependencies": {
-    "sass": "^1.102.0"
+    "concurrently": "^10.0.4",
+    "sass": "^1.80.0",
+    "chokidar": "^3.6.0"
   }
 }

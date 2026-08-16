@@ -28,3 +28,7 @@ services:
     image: bookit-workers:latest
     networks:
       - bookit-prod
+
+  azurite:
+    networks:
+      - bookit-prod

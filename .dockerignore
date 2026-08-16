@@ -11,5 +11,5 @@
 # Git
 .git/
 
-# JS
+# JS node_modules only (not package.json)
 **/node_modules/
