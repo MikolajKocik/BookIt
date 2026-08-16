@@ -10,6 +10,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 (() => {
     const agentContainer = document.getElementById("agent-container");
+    ;
     const agentButton = document.getElementById("agent-button");
     const agentChatButton = document.getElementById("agent-chat-button");
     const closeButton = document.querySelector(".agent-header .btn-close-chat");
@@ -22,20 +23,22 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     }
     agentButton === null || agentButton === void 0 ? void 0 : agentButton.addEventListener('click', (e) => {
         e.stopPropagation();
-        agentContainer === null || agentContainer === void 0 ? void 0 : agentContainer.classList.toggle('d-none');
+        if (!(agentContainer === null || agentContainer === void 0 ? void 0 : agentContainer.open))
+            agentContainer === null || agentContainer === void 0 ? void 0 : agentContainer.showModal();
         if (messagesList) {
             messagesList.scrollTo(0, messagesList.scrollHeight);
         }
     });
     agentChatButton === null || agentChatButton === void 0 ? void 0 : agentChatButton.addEventListener('click', (e) => {
         e.stopPropagation();
-        agentContainer === null || agentContainer === void 0 ? void 0 : agentContainer.classList.toggle('d-none');
+        if (!(agentContainer === null || agentContainer === void 0 ? void 0 : agentContainer.open))
+            agentContainer === null || agentContainer === void 0 ? void 0 : agentContainer.showModal();
         if (messagesList) {
             messagesList.scrollTo(0, messagesList.scrollHeight);
         }
     });
     closeButton === null || closeButton === void 0 ? void 0 : closeButton.addEventListener('click', () => {
-        agentContainer === null || agentContainer === void 0 ? void 0 : agentContainer.classList.add('d-none');
+        agentContainer === null || agentContainer === void 0 ? void 0 : agentContainer.close();
         if (messagesList) {
             messagesList.innerHTML = '';
             sessionStorage.removeItem("SESSION_ID");
@@ -43,28 +46,28 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
             sessionStorage.setItem("SESSION_ID", sessionId);
         }
     });
-    document.addEventListener('click', function (event) {
-        if (!(event.target instanceof Node))
-            return;
-        if (!agentContainer || !agentChatButton)
-            return;
-        const isOpen = !agentContainer.classList.contains('d-none');
-        if (isOpen) {
-            const clickedOutsideContainer = !agentContainer.contains(event.target);
-            const clickedOutsideButton = !agentChatButton.contains(event.target);
-            if (clickedOutsideContainer && clickedOutsideButton) {
-                agentContainer.classList.add('d-none');
-            }
+    agentContainer === null || agentContainer === void 0 ? void 0 : agentContainer.addEventListener('click', (e) => {
+        if (e.target === agentContainer) {
+            agentContainer.close();
         }
     });
+    const addMessage = ({ message, isUser, isError = false }) => {
+        const element = document.createElement('div');
+        element.className = isUser
+            ? 'text-message p-2 px-3 shadow-sm user-message align-self-end text-white bg-primary'
+            : `text-message p-2 px-3 shadow-sm bot-message align-self-start bg-white text-dark border ${isError
+                ? 'bg-white text-danger border'
+                : 'bg-white text-dark border'}`;
+        element.textContent = message;
+        messagesList === null || messagesList === void 0 ? void 0 : messagesList.appendChild(element);
+    };
     const sendMessage = (request) => __awaiter(void 0, void 0, void 0, function* () {
         var _a;
         const token = (_a = document.querySelector('input[name="__RequestVerificationToken"]')) === null || _a === void 0 ? void 0 : _a.value;
-        const userMsgHtml = `
-        <div class="text-message p-2 px-3 shadow-sm user-message align-self-end text-white bg-primary">
-            ${request.message}
-        </div>`;
-        messagesList === null || messagesList === void 0 ? void 0 : messagesList.insertAdjacentHTML('beforeend', userMsgHtml);
+        addMessage({
+            message: request.message,
+            isUser: true
+        });
         if (messagesList) {
             messagesList.scrollTo(0, messagesList.scrollHeight);
         }
@@ -84,27 +87,26 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
             });
             if (response.ok) {
                 const data = yield response.json();
-                const botMsgHtml = `
-                <div class="text-message p-2 px-3 shadow-sm bot-message align-self-start bg-white text-dark border">
-                    ${data.answer}
-                </div>`;
-                messagesList === null || messagesList === void 0 ? void 0 : messagesList.insertAdjacentHTML('beforeend', botMsgHtml);
+                addMessage({
+                    message: data.answer,
+                    isUser: false
+                });
             }
             else {
-                const botMsgHtml = `
-                <div class="text-message p-2 px-3 shadow-sm bot-message align-self-start bg-white text-danger border">
-                    Przepraszam, wystąpił problem podczas komunikacji z serwerem.
-                </div>`;
-                messagesList === null || messagesList === void 0 ? void 0 : messagesList.insertAdjacentHTML('beforeend', botMsgHtml);
+                addMessage({
+                    message: 'Przepraszam, wystąpił problem podczas komunikacji z serwerem.',
+                    isUser: false,
+                    isError: true
+                });
             }
         }
         catch (error) {
             console.error("Kernel error:", error);
-            const botMsgHtml = `
-            <div class="text-message p-2 px-3 shadow-sm bot-message align-self-start bg-white text-danger border">
-                Przepraszam, wystąpił błąd sieci.
-            </div>`;
-            messagesList === null || messagesList === void 0 ? void 0 : messagesList.insertAdjacentHTML('beforeend', botMsgHtml);
+            addMessage({
+                message: 'Przepraszam, wystąpił błąd sieci.',
+                isUser: false,
+                isError: true
+            });
         }
         finally {
             // Hide typing indicator

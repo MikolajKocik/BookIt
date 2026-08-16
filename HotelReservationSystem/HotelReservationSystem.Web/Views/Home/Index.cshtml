@@ -4,76 +4,76 @@
     <div id="up-wrapper" class="container d-flex flex-column align-items-center text-center py-5">
         <h1 class="display-4 fw-bold">Witamy w Hotelu Aurora!</h1>
         <div id="main-text" class="col-12 col-md-8 col-lg-6 mb-4">
-            <p class="lead"> 
-                Miejscu, gdzie komfort spotyka się z elegancją. 
+            <p class="lead">
+                Miejscu, gdzie komfort spotyka się z elegancją.
                 Oferujemy wyjątkową atmosferę, nowoczesne wnętrza oraz usługi, które sprawią, że każdy pobyt stanie się niezapomnianym doświadczeniem.
                 Zapraszamy do świata relaksu i gościnności na najwyższym poziomie.
             </p>
         </div>
-        <div class="container">    
+        <div class="container">
             <div class="row">
                 <div class="col-12 col-md-3 ms-auto">
                     <p>Zobacz, jak wygląda wypoczynek w Hotelu Aurora</p>
-                    <a asp-controller="Home" asp-action="Gallery" 
-                        id="gallery-button" 
-                        class="btn btn-lg rounded px-4 shadow-sm text-white">
-                        Galeria
-                    </a>
+                    <a asp-controller="Home" asp-action="Gallery"
+                    id="gallery-button"
+                    class="btn btn-lg rounded px-4 shadow-sm text-white">
+                    Galeria
+                </a>
+            </div>
+            <div class="col-12 col-md-3 me-auto">
+                <p>Jeśli masz pytania, z chęcią odpowiemy na każde z nich</p>
+                <button
+                id="agent-button"
+                class="btn btn-lg rounded px-4 shadow-sm text-white">
+                Zadaj pytanie
+            </button>
+        </div>
+
+        <dialog id="agent-container" class="bg-white border shadow-lg rounded-3 d-flex flex-column">
+            @Html.AntiForgeryToken()
+            <div class="agent-header d-flex align-items-center justify-content-between text-white p-3 w-100">
+                <div class="d-flex align-items-center gap-2">
+                    <div class="position-relative">
+                        <div class="avatar d-flex align-items-center justify-content-center bg-white bg-opacity-25 rounded-circle fw-bold text-white">A</div>
+                        <span class="status-dot position-absolute rounded-circle bg-success border border-white"></span>
+                    </div>
+                    <div class="text-start lh-sm">
+                        <h6 class="m-0 fw-bold" style="font-size: 0.95rem;">Agent Aurora</h6>
+                        <small class="text-white-50" style="font-size: 0.75rem;">Online</small>
+                    </div>
                 </div>
-                <div class="col-12 col-md-3 me-auto">
-                    <p>Jeśli masz pytania, z chęcią odpowiemy na każde z nich</p>
-                    <button
-                        id="agent-button"
-                        class="btn btn-lg rounded px-4 shadow-sm text-white">
-                        Zadaj pytanie
+                <button type="button" class="btn-close btn-close-white btn-close-chat" aria-label="Close"></button>
+            </div>
+            <div class="d-flex flex-column bg-light" style="flex: 1 1 0; min-height: 0;">
+                <div class="text-messages-list p-3 d-flex flex-column gap-2" style="flex: 1 1 0; min-height: 0;">
+                    @foreach (var msg in Model.Messages)
+                    {
+                        <div class="text-message p-2 px-3 shadow-sm @(msg.IsUser ? "user-message align-self-end text-white bg-primary" : "bot-message align-self-start bg-white text-dark border")">
+                            @msg.Content
+                        </div>
+                    }
+                </div>
+                <div id="chat-typing-indicator" class="chat-typing-indicator px-3 py-2 bg-light text-muted d-flex align-items-center gap-1 d-none" style="font-size: 0.8rem;">
+                    <span>Aurora pisze</span>
+                    <span class="typing-dot">.</span>
+                    <span class="typing-dot">.</span>
+                    <span class="typing-dot">.</span>
+                </div>
+                <div class="bg-white border-top p-2 d-flex align-items-center gap-2">
+                    <div class="flex-grow-1">
+                        <textarea class="chat-input form-control rounded-pill px-3 py-1 border" rows="1" placeholder="Zadaj pytanie..." style="resize: none; font-size: 0.9rem;"></textarea>
+                    </div>
+                    <button type="button" id="send-btn" class="btn btn-primary rounded-circle d-flex align-items-center justify-content-center p-0" style="width: 2.25rem; height: 2.25rem; min-width: 2.25rem;">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" style="width: 1.1rem; height: 1.1rem; fill: white;">
+                            <path d="M498.1 5.6c10.1 7 15.4 19.1 13.5 31.2l-64 416c-1.5 9.7-7.4 18.2-16 23s-18.9 5.4-28 1.6L284 427.7l-68.5 74.1c-8.9 9.7-22.9 12.9-35.2 8.1S160 493.2 160 480V396.4c0-4 1.5-7.8 4.2-10.7L411.8 114.1c4.5-5 4.5-12.5-.1-17.6s-12.5-4.5-17.6 .1L135.6 350.6c-9.6 10.6-25.4 14.9-39.4 10.7L18.7 337.8c-10.4-3.1-18-11.8-19.5-22.6s4-21.2 14-26.2l448-224C471.5-1 488-1.5 498.1 5.6z"/>
+                        </svg>
                     </button>
                 </div>
-
-                <div id="agent-container" class="position-fixed bg-white border shadow-lg rounded-3 d-flex flex-column d-none" style="z-index: 9999;">                    
-                    @Html.AntiForgeryToken()
-                    <div class="agent-header d-flex align-items-center justify-content-between text-white p-3 w-100">
-                        <div class="d-flex align-items-center gap-2">
-                            <div class="position-relative">
-                                <div class="avatar d-flex align-items-center justify-content-center bg-white bg-opacity-25 rounded-circle fw-bold text-white">A</div>
-                                <span class="status-dot position-absolute rounded-circle bg-success border border-white"></span>
-                            </div>
-                            <div class="text-start lh-sm">
-                                <h6 class="m-0 fw-bold" style="font-size: 0.95rem;">Agent Aurora</h6>
-                                <small class="text-white-50" style="font-size: 0.75rem;">Online</small>
-                            </div>
-                        </div>
-                        <button type="button" class="btn-close btn-close-white btn-close-chat" aria-label="Close"></button>
-                    </div>
-                    <div class="d-flex flex-column bg-light" style="flex: 1 1 0; min-height: 0;">
-                        <div class="text-messages-list p-3 d-flex flex-column gap-2" style="flex: 1 1 0; min-height: 0;">
-                            @foreach (var msg in Model.Messages)
-                            {
-                                <div class="text-message p-2 px-3 shadow-sm @(msg.IsUser ? "user-message align-self-end text-white bg-primary" : "bot-message align-self-start bg-white text-dark border")">
-                                    @msg.Content
-                                </div>
-                            }
-                        </div>
-                        <div id="chat-typing-indicator" class="chat-typing-indicator px-3 py-2 bg-light text-muted d-flex align-items-center gap-1 d-none" style="font-size: 0.8rem;">
-                            <span>Aurora pisze</span>
-                            <span class="typing-dot">.</span>
-                            <span class="typing-dot">.</span>
-                            <span class="typing-dot">.</span>
-                        </div>
-                        <div class="bg-white border-top p-2 d-flex align-items-center gap-2">
-                            <div class="flex-grow-1">
-                                <textarea class="chat-input form-control rounded-pill px-3 py-1 border" rows="1" placeholder="Zadaj pytanie..." style="resize: none; font-size: 0.9rem;"></textarea>
-                            </div>
-                            <button type="button" id="send-btn" class="btn btn-primary rounded-circle d-flex align-items-center justify-content-center p-0" style="width: 2.25rem; height: 2.25rem; min-width: 2.25rem;">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" style="width: 1.1rem; height: 1.1rem; fill: white;">
-                                    <path d="M498.1 5.6c10.1 7 15.4 19.1 13.5 31.2l-64 416c-1.5 9.7-7.4 18.2-16 23s-18.9 5.4-28 1.6L284 427.7l-68.5 74.1c-8.9 9.7-22.9 12.9-35.2 8.1S160 493.2 160 480V396.4c0-4 1.5-7.8 4.2-10.7L411.8 114.1c4.5-5 4.5-12.5-.1-17.6s-12.5-4.5-17.6 .1L135.6 350.6c-9.6 10.6-25.4 14.9-39.4 10.7L18.7 337.8c-10.4-3.1-18-11.8-19.5-22.6s4-21.2 14-26.2l448-224C471.5-1 488-1.5 498.1 5.6z"/>
-                                </svg>
-                            </button>
-                        </div>
-                    </div>                   
-                </div>
             </div>
-        </div>
+        </dialog>
     </div>
+</div>
+</div>
 </section>
 
 <section class="py-5" style="background-color: #EBEBEB;">
@@ -120,13 +120,13 @@
     <div class="container text-center">
         <h3 class="mb-4">Opinie naszych klientów</h3>
         <hr class="mx-auto w-25 border-top border-3 mb-5" style="border-color: #23405c !important;" />
-        
+
         <div id="opinionsCarousel" class="carousel slide" data-bs-ride="carousel" style="max-width: 600px; margin: 0 auto;">
             <!-- Indicators -->
             <div class="carousel-indicators mb-0" id="carousel-indicators" style="position: relative; bottom: -20px; z-index: 15;">
                 <!-- Dynamically loaded -->
             </div>
-            
+
             <!-- Slides -->
             <div class="carousel-inner" id="carousel-inner">
                 <div class="carousel-item active">
@@ -173,11 +173,11 @@
 </section>
 
 @section Scripts{
-    <link rel="stylesheet" href="~/scss/home.css" />
-    <script src="~/js/Home/gallery.js"></script>
-    <script src="~/js/Home/availRoomsBtn.js"></script>
-    <script src="~/js/Home/scrollBtn.js"></script>
-    <script src="~/js/Home/opinions.js"></script>
-    <script src="~/js/Home/agentChat.js"></script>
-    <script src="~/js/Layout/datePicker.js"></script>
+<link rel="stylesheet" href="~/scss/home.css" />
+<script src="~/js/Home/gallery.js"></script>
+<script src="~/js/Home/availRoomsBtn.js"></script>
+<script src="~/js/Home/scrollBtn.js"></script>
+<script src="~/js/Home/opinions.js"></script>
+<script src="~/js/Home/agentChat.js"></script>
+<script src="~/js/Layout/datePicker.js"></script>
 }

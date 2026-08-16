@@ -30,10 +30,11 @@ $dot-bg: #fff;
 }
 
 #agent-container {
+    display: flex;
     position: fixed;
-    bottom: 0.5rem;
-    right: 6.5rem;
-    z-index: 9999;
+    flex-direction: column;
+    margin: 0;
+    inset: auto 6.5rem 0.5rem auto;
     width: 23.75rem;
     height: 34.375rem;
     overflow: hidden;

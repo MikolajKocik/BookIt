@@ -10,7 +10,7 @@ interface UserRequest {
 }
 
 ((): void => {
-    const agentContainer = document.getElementById("agent-container");
+    const agentContainer = document.getElementById("agent-container") as HTMLDialogElement | null;;
     const agentButton: HTMLElement | null = document.getElementById("agent-button");
     const agentChatButton = document.getElementById("agent-chat-button");
     const closeButton = document.querySelector(".agent-header .btn-close-chat");
@@ -26,7 +26,7 @@ interface UserRequest {
 
     agentButton?.addEventListener('click', (e) => {
         e.stopPropagation();
-        agentContainer?.classList.toggle('d-none');
+        if (!agentContainer?.open) agentContainer?.show();
         if (messagesList) {
             messagesList.scrollTo(0, messagesList.scrollHeight);
         }
@@ -34,14 +34,14 @@ interface UserRequest {
 
     agentChatButton?.addEventListener('click', (e) => {
         e.stopPropagation();
-        agentContainer?.classList.toggle('d-none');
+        if (!agentContainer?.open) agentContainer?.show();
         if (messagesList) {
             messagesList.scrollTo(0, messagesList.scrollHeight);
         }
     });
 
     closeButton?.addEventListener('click', () => {
-        agentContainer?.classList.add('d-none');
+        agentContainer?.close();
         if (messagesList) {
             messagesList.innerHTML = '';
             sessionStorage.removeItem("SESSION_ID");
@@ -50,19 +50,9 @@ interface UserRequest {
         }
     });
 
-    document.addEventListener('click', function (event) {
-        if (!(event.target instanceof Node)) return;
-        if (!agentContainer || !agentChatButton) return;
-
-        const isOpen = !agentContainer.classList.contains('d-none');
-
-        if (isOpen) {
-            const clickedOutsideContainer = !agentContainer.contains(event.target);
-            const clickedOutsideButton = !agentChatButton.contains(event.target);
-
-            if (clickedOutsideContainer && clickedOutsideButton) {
-                agentContainer.classList.add('d-none');
-            }
+    agentContainer?.addEventListener('click', (e) => {
+        if (e.target === agentContainer) {
+            agentContainer.close();
         }
     });
 
