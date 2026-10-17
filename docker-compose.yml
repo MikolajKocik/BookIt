@@ -16,6 +16,8 @@ services:
       - OpenAI__ApiKey=${OPENAI_API_KEY}
       - OpenAI__Provider=${OPENAI_PROVIDER}
       - OpenAI__Model=${OPENAI_MODEL}
+      - Gemini__ApiKey=${GEMINI_API_KEY:-}
+      - Gemini__Model=${GEMINI_MODEL:-gemini-3.5-flash-lite}
       - ASPNETCORE_ENVIRONMENT=Development 
     volumes:
       - data-protection-keys:/home/app/.aspnet/DataProtection-Keys

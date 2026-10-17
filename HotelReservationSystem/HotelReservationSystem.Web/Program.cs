@@ -1,3 +1,4 @@
+using System.ClientModel;
 using HotelReservationSystem.Application.Extensions;
 using HotelReservationSystem.Infrastructure.Data;
 using HotelReservationSystem.Infrastructure.Data.Extensions;
@@ -34,8 +35,12 @@ builder.Services.AddWebServices(builder.Configuration);
 
 builder.Services.AddHttpContextAccessor();
 
-string openAiProvider = builder.Configuration["OpenAI:Provider"] ?? "OpenAI";
-string openAiModel = builder.Configuration["OpenAI:Model"] ?? "gpt-4o-mini";
+string openAiProvider = builder.Configuration["OpenAI:Provider"]
+    ?? builder.Configuration["OPENAI_PROVIDER"]
+    ?? "OpenAI";
+string openAiModel = builder.Configuration["OpenAI:Model"]
+    ?? builder.Configuration["OPENAI_MODEL"]
+    ?? "gpt-4o-mini";
 
 if (openAiProvider.Equals("Ollama", StringComparison.OrdinalIgnoreCase))
 {
@@ -45,6 +50,27 @@ if (openAiProvider.Equals("Ollama", StringComparison.OrdinalIgnoreCase))
     };
     var client = new OpenAIClient(new System.ClientModel.ApiKeyCredential("ollama"), options);
     builder.Services.AddSingleton(client.GetChatClient(openAiModel));
+}
+else if (openAiProvider.Equals("Gemini", StringComparison.OrdinalIgnoreCase) ||
+         openAiProvider.Equals("Google", StringComparison.OrdinalIgnoreCase) ||
+         (!string.IsNullOrWhiteSpace(builder.Configuration["Gemini:ApiKey"]) && string.IsNullOrWhiteSpace(builder.Configuration["OpenAI:ApiKey"])) ||
+         (!string.IsNullOrWhiteSpace(builder.Configuration["GEMINI_API_KEY"]) && string.IsNullOrWhiteSpace(builder.Configuration["OpenAI:ApiKey"])))
+{
+    string geminiKey = builder.Configuration["Gemini:ApiKey"]
+        ?? builder.Configuration["GEMINI_API_KEY"]
+        ?? builder.Configuration["OpenAI:ApiKey"]
+        ?? throw new InvalidOperationException("Gemini / Google API Key not found in configuration ('Gemini:ApiKey' or 'GEMINI_API_KEY')");
+
+    string geminiModel = builder.Configuration["Gemini:Model"]
+        ?? builder.Configuration["GEMINI_MODEL"]
+        ?? (!string.IsNullOrWhiteSpace(openAiModel) && !openAiModel.StartsWith("gpt", StringComparison.OrdinalIgnoreCase) ? openAiModel : "gemini-2.5-flash");
+
+    var options = new OpenAIClientOptions
+    {
+        Endpoint = new Uri("https://generativelanguage.googleapis.com/v1beta/openai/")
+    };
+    var client = new OpenAIClient(new ApiKeyCredential(geminiKey), options);
+    builder.Services.AddSingleton(client.GetChatClient(geminiModel));
 }
 else
 {

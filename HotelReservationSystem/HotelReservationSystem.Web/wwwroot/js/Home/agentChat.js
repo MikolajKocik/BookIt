@@ -24,7 +24,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     agentButton === null || agentButton === void 0 ? void 0 : agentButton.addEventListener('click', (e) => {
         e.stopPropagation();
         if (!(agentContainer === null || agentContainer === void 0 ? void 0 : agentContainer.open))
-            agentContainer === null || agentContainer === void 0 ? void 0 : agentContainer.showModal();
+            agentContainer === null || agentContainer === void 0 ? void 0 : agentContainer.show();
         if (messagesList) {
             messagesList.scrollTo(0, messagesList.scrollHeight);
         }
@@ -32,7 +32,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     agentChatButton === null || agentChatButton === void 0 ? void 0 : agentChatButton.addEventListener('click', (e) => {
         e.stopPropagation();
         if (!(agentContainer === null || agentContainer === void 0 ? void 0 : agentContainer.open))
-            agentContainer === null || agentContainer === void 0 ? void 0 : agentContainer.showModal();
+            agentContainer === null || agentContainer === void 0 ? void 0 : agentContainer.show();
         if (messagesList) {
             messagesList.scrollTo(0, messagesList.scrollHeight);
         }
