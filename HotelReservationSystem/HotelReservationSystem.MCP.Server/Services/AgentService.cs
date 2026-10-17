@@ -1,14 +1,15 @@
-using HotelReservationSystem.MCP.Server.Tools;
-using HotelReservationSystem.MCP.Server.Utils;
-using OpenAI.Chat;
-using System.Text.Json;
-using HotelReservationSystem.MCP.Server.Interfaces;
-using Microsoft.Extensions.Caching.Distributed;
-using Microsoft.AspNetCore.Http;
 using System.Security.Claims;
+using System.Text;
+using System.Text.Json;
 using HotelReservationSystem.Application.CQRS.Abstractions;
 using HotelReservationSystem.Application.CQRS.Guests.Queries;
-using System.Text;
+using HotelReservationSystem.MCP.Server.Guardrails;
+using HotelReservationSystem.MCP.Server.Interfaces;
+using HotelReservationSystem.MCP.Server.Tools;
+using HotelReservationSystem.MCP.Server.Utils;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Caching.Distributed;
+using OpenAI.Chat;
 
 namespace HotelReservationSystem.MCP.Server.Services;
 
@@ -24,6 +25,7 @@ public sealed class AgentService : IAgentService
     private readonly IDistributedCache _cache;
     private readonly IHttpContextAccessor _httpContext;
     private readonly ICQRSMediator _mediator;
+    private readonly ITopicalGuardrail _topicalGuardrail;
 
     public AgentService(
         ReceptionTools receptionTools,
@@ -31,7 +33,8 @@ public sealed class AgentService : IAgentService
         ChatClient chatClient,
         IDistributedCache cache,
         IHttpContextAccessor httpContext,
-        ICQRSMediator mediator
+        ICQRSMediator mediator,
+        ITopicalGuardrail topicalGuardrail
         )
     {
         _guestTools = guestTools;
@@ -40,8 +43,11 @@ public sealed class AgentService : IAgentService
         _cache = cache;
         _httpContext = httpContext;
         _mediator = mediator;
+        _topicalGuardrail = topicalGuardrail;
 
-        _systemPrompt = McpServerUtils.LoadPromptFromYaml("AuroraBase.yaml");
+        _systemPrompt = McpServerUtils.LoadPromptFromYaml("AuroraBaseV1.yaml");
+
+
         _tools = McpServerUtils.GenerateToolsFrom<ReceptionTools>();
         _tools.AddRange(McpServerUtils.GenerateToolsFrom<GuestTools>());
     }
@@ -79,7 +85,7 @@ public sealed class AgentService : IAgentService
                     DateTime.Parse(root.GetProperty("departure").GetString()!),
                     root.GetProperty("guests").GetInt32(),
                     cancellationToken),
-                
+
                 "save_guest_preference" => await _guestTools.SavePreferenceAsync(
                     root.GetProperty("category").GetString()!,
                     root.GetProperty("value").GetString()!,
@@ -113,7 +119,7 @@ public sealed class AgentService : IAgentService
             _ => new UserChatMessage(dto.Content)
         };
     }
-    
+
     /// <summary>
     /// Process the chat bot answer for user's request
     /// </summary>
@@ -122,6 +128,12 @@ public sealed class AgentService : IAgentService
     /// <returns>The answer based on user's request</returns>
     public async Task<string> ProcessMessageAsync(Guid sessionId, string message, CancellationToken cancellationToken)
     {
+        TopicalGuardrailResult guardrailResult = await _topicalGuardrail.EvaluateAsync(message, cancellationToken);
+        if (!guardrailResult.IsAllowed)
+        {
+            return guardrailResult.RefusalResponse ?? TopicalGuardrail.DefaultRefusal;
+        }
+
         string cacheKey = $"session_{sessionId}";
         List<ChatMessageDto> historyDto = new();
 
@@ -139,14 +151,13 @@ public sealed class AgentService : IAgentService
 
             if (!string.IsNullOrEmpty(email))
             {
-                var preferences = await _mediator.SendAsync(new GetGuestPreferenceQuery(email), cancellationToken);       
+                var preferences = await _mediator.SendAsync(new GetGuestPreferenceQuery(email), cancellationToken);
 
                 if (preferences.Any())
                 {
                     var memoryBuilder = new StringBuilder();
                     memoryBuilder.AppendLine("\n--- Pamięć długoterminowa gościa ---");
-                    memoryBuilder.AppendLine(@"Wykorzystaj te informacje, aby spersonalizować obsługę.
-                    Jeśli gość rezerwuje pokój lub zamawia jedzenie, od razu weź pod uwagę te fakty:");
+                    memoryBuilder.AppendLine(@"Wykorzystaj te informacje, aby spersonalizować obsługę.Jeśli gość rezerwuje pokój lub zamawia jedzenie, od razu weź pod uwagę te fakty:");
 
                     foreach (var pref in preferences)
                     {
@@ -155,7 +166,7 @@ public sealed class AgentService : IAgentService
                     memoryBuilder.AppendLine("-----------------------------------------");
 
                     personalizedSystemPrompt += memoryBuilder.ToString();
-                }     
+                }
             }
 
             historyDto.Add(new ChatMessageDto("system", personalizedSystemPrompt));
@@ -197,7 +208,7 @@ public sealed class AgentService : IAgentService
             {
                 finalAnswer = completion.Content[0].Text ?? finalAnswer;
                 historyDto.Add(new ChatMessageDto("assistant", finalAnswer));
-                break; 
+                break;
             }
         }
 
@@ -205,14 +216,14 @@ public sealed class AgentService : IAgentService
         {
             // Skip(0) because its system prompt message
             var oldMessages = historyDto.Skip(1).Take(8).ToList();
-            
+
             string chatLogToSummarize = string.Join("\n", oldMessages.Select(m => $"{m.Role}: {m.Content}"));
-            
+
             string summaryPrompt = $"Streszcz w jednym krótkim zdaniu najważniejsze fakty z tej rozmowy, zachowując kontekst ustaleń: \n{chatLogToSummarize}";
             var summary = await _chatClient.CompleteChatAsync(new[] { new SystemChatMessage(summaryPrompt) });
-            
+
             historyDto.RemoveRange(1, 8);
-            
+
             historyDto.Insert(1, new ChatMessageDto("system", $"[Streszczenie wcześniejszej części rozmowy]: {summary.Value.Content[0].Text}"));
         }
 
@@ -225,5 +236,5 @@ public sealed class AgentService : IAgentService
         await _cache.SetStringAsync(cacheKey, updatedHistoryJson, cacheOptions, cancellationToken);
 
         return finalAnswer;
-    }    
+    }
 }
